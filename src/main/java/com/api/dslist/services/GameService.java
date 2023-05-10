@@ -3,6 +3,7 @@ package com.api.dslist.services;
 import com.api.dslist.dto.GameDTO;
 import com.api.dslist.dto.GameMinDTO;
 import com.api.dslist.entities.Game;
+import com.api.dslist.projections.GameMinProjection;
 import com.api.dslist.repositories.GameRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,5 +28,11 @@ public class GameService {
     public List<GameMinDTO> listar() {
         List<Game> result = gameRepository.findAll();
         return result.stream().map(GameMinDTO::new).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> listarGameList(Long listId) {
+        List<GameMinProjection> games = gameRepository.searchByList(listId);
+        return games.stream().map(GameMinDTO::new).toList();
     }
 }
